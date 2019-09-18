@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:obah_mobile/utils/user-session.dart';
 
-// String _baseUrl = "http://obahapi-env.kpz2ejwur2.us-east-1.elasticbeanstalk.com";
-String _baseUrl = "http://192.168.1.5:5000";
+String _baseUrl =
+    "http://obahapi-env.kpz2ejwur2.us-east-1.elasticbeanstalk.com";
+// String _baseUrl = "http://192.168.1.5:5000";
 
 _getUri(endpoint) {
   return [_baseUrl, endpoint].join('');

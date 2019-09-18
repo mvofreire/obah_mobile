@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:obah_mobile/components/main.dart';
 import 'package:obah_mobile/models/Event.dart';
+import 'package:obah_mobile/models/main.dart';
+import 'package:obah_mobile/services/event.service.dart'
+    show createEvent, removeEvent;
+
+enum EventDialogAction {
+  cancel,
+  discard,
+  save,
+}
 
 class AddEvent extends StatefulWidget {
   @override
@@ -29,63 +38,109 @@ class _AddEventState extends State<AddEvent> {
     });
   }
 
-  void _onCreateClick() {
-    print(event);
+  void _setTotalParticipants(int total) {
+    setState(() {
+      event.participants = total;
+    });
   }
+
+  void _onCreateClick() async {
+    try {
+      event.validate();
+      Event model = await createEvent(event);
+      print(model);
+      Navigator.pop(context, EventDialogAction.save);
+    } on Exception catch (e) {
+      Navigator.pop(context, EventDialogAction.cancel);
+      print(e.toString());
+    }
+  }
+
+  String dropdown1Value = 'Free';
 
   @override
   Widget build(BuildContext context) {
+    final inputTitle = TextField(
+      onChanged: _onChangeTitle,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        labelText: "Nome do Evento",
+        hintText: "Beer Talks",
+        // icon: Icon(Icons.label),
+      ),
+    );
+
+    final inputDate = DatePicker(
+      icon: Icon(Icons.date_range),
+      label: "Data do evento",
+      onChange: _onSelectDate,
+    );
+
+    final convidados = NumberPicker(
+      icon: Icon(Icons.people),
+      label: 'Total de pessoas',
+      suffix: 'pessoas',
+      value: event.participants,
+      onChange: _setTotalParticipants,
+    );
+
+    final typeEvent = ComboBox(
+      label: "Tipo",
+      icon: Icon(Icons.fastfood),
+      onChange: _setTypeEvent,
+      selected: event.type,
+      options: <Option>[
+        Option(
+          label: "Beer Talk",
+          value: EventTypes.conversation,
+        ),
+        Option(
+          label: "Bate Papo com comida",
+          value: EventTypes.happyHour,
+        ),
+        Option(
+          label: "Festa & Diversão",
+          value: EventTypes.party,
+        ),
+        Option(
+          label: "Encontro Particular",
+          value: EventTypes.private,
+        ),
+      ],
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           event.title.isEmpty ? "Add Evento" : event.title,
           style: TextStyle(color: Colors.white),
         ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: _onCreateClick,
+            child: Text("Salvar"),
+          )
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
+      body: Scrollbar(
+        child: ListView(
+          padding:
+              const EdgeInsets.only(top: 20, bottom: 30, left: 10, right: 10),
           children: <Widget>[
-            TextField(
-              onChanged: _onChangeTitle,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(labelText: "Nome do Evento"),
+            inputTitle,
+            SizedBox(
+              height: 30,
             ),
+            inputDate,
             SizedBox(
               height: 10,
             ),
-            DatePicker(
-              onChange: _onSelectDate,
-            ),
+            convidados,
             SizedBox(
               height: 10,
             ),
-            RadioGroup(
-              onChange: _setTypeEvent,
-              options: [
-                Option(label: "Comida e Bebida", value: 0, selected: true),
-                Option(label: "Lazer e Esportes", value: 1),
-                Option(label: "Bate Papo e Diversão", value: 2),
-                Option(label: "Encontro particular", value: 3),
-              ],
-            )
+            typeEvent
           ],
-        ),
-      ),
-      bottomNavigationBar: FlatButton(
-        onPressed: _onCreateClick,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-          child: Container(
-            color: Colors.blue,
-            height: 40,
-            child: Center(
-              child: Text(
-                "Criar Evento",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
         ),
       ),
     );

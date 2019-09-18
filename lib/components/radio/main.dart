@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-class Option {
-  final String label;
-  final dynamic value;
-  final bool selected;
-
-  Option({@required this.label, @required this.value, this.selected = false});
-}
+import 'package:obah_mobile/models/Option.dart';
 
 class RadioGroup extends StatefulWidget {
   final List<Option> options;
