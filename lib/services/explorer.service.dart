@@ -1,6 +1,6 @@
 import 'package:obah_mobile/models/Offer.dart';
 
-List<Offer> _mockData = List.generate(100, (index) {
+List<Offer> _mockData = List.generate(20, (index) {
   return Offer(title: "teste $index", subtitle: "subtitle $index");
 });
 

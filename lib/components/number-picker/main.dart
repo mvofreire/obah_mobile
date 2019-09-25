@@ -9,12 +9,13 @@ class NumberPicker extends StatelessWidget {
   final ValueChanged<int> onChange;
   final Icon icon;
 
-  NumberPicker(
-      {@required this.onChange,
-      @required this.value,
-      this.label = 'label',
-      this.suffix = 'total',
-      this.icon});
+  NumberPicker({
+    @required this.onChange,
+    @required this.value,
+    this.label = 'label',
+    this.suffix = 'total',
+    this.icon,
+  });
 
   void _onShowPicker(BuildContext context) async {
     int _value = await showDialog<int>(

@@ -4,7 +4,7 @@ import 'package:obah_mobile/components/main.dart';
 import 'package:obah_mobile/models/Event.dart';
 import 'package:obah_mobile/models/main.dart';
 import 'package:obah_mobile/services/event.service.dart'
-    show createEvent, removeEvent;
+    show createEvent;
 
 enum EventDialogAction {
   cancel,
@@ -20,7 +20,13 @@ class AddEvent extends StatefulWidget {
 class _AddEventState extends State<AddEvent> {
   Event event = new Event();
 
-  void _onChangeTitle(String title) {
+  @override
+  void initState() {
+    this._onSelectDate(DateTime.now());
+    super.initState();
+  }
+
+  void _setTitleEvent(String title) {
     setState(() {
       event.title = title;
     });
@@ -61,12 +67,9 @@ class _AddEventState extends State<AddEvent> {
   @override
   Widget build(BuildContext context) {
     final inputTitle = TextField(
-      onChanged: _onChangeTitle,
-      keyboardType: TextInputType.text,
+      onChanged: _setTitleEvent,
       decoration: InputDecoration(
-        labelText: "Nome do Evento",
-        hintText: "Beer Talks",
-        // icon: Icon(Icons.label),
+        labelText: "Nome do evento",
       ),
     );
 
@@ -112,7 +115,7 @@ class _AddEventState extends State<AddEvent> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          event.title.isEmpty ? "Add Evento" : event.title,
+          event.title.isEmpty ? "Criar Evento" : event.title,
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -128,18 +131,15 @@ class _AddEventState extends State<AddEvent> {
               const EdgeInsets.only(top: 20, bottom: 30, left: 10, right: 10),
           children: <Widget>[
             inputTitle,
+            typeEvent,
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             inputDate,
             SizedBox(
               height: 10,
             ),
             convidados,
-            SizedBox(
-              height: 10,
-            ),
-            typeEvent
           ],
         ),
       ),

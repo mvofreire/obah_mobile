@@ -6,6 +6,8 @@ import 'pages/login.dart';
 void main() => runApp(MyApp());
 
 class WaitingSession extends StatelessWidget {
+  static String tag = 'waiting-page';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,36 +23,35 @@ class WaitingSession extends StatelessWidget {
 
 class MyApp extends StatelessWidget {
   final UserSession session = new UserSession();
-  final routes = <String, WidgetBuilder>{
-    LoginPage.tag: (context) => LoginPage(),
-    HomePage.tag: (context) => HomePage(),
-  };
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: session.ready,
-        builder: (context, snapshot) {
-          Widget bodyWidget;
+      future: session.ready,
+      builder: (context, snapshot) {
+        Widget _home;
+        if (snapshot.data == null) {
+          _home = WaitingSession();
+        } else if (session.isLogged()) {
+          _home = HomePage();
+        } else {
+          _home = LoginPage();
+        }
 
-          if (snapshot.data == null) {
-            bodyWidget = WaitingSession();
-          } else if (session.isLogged()) {
-            bodyWidget = HomePage();
-          } else {
-            bodyWidget = LoginPage();
-          }
-
-          return MaterialApp(
-            title: 'Obah',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.lightBlue,
-              fontFamily: 'Nunito',
-            ),
-            home: bodyWidget,
-            routes: routes,
-          );
-        });
+        return MaterialApp(
+          title: 'Obah',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.lightBlue,
+            fontFamily: 'Nunito',
+          ),
+          home: _home,
+          routes: {
+            LoginPage.tag: (context) => LoginPage(),
+            HomePage.tag: (context) => HomePage(),
+          },
+        );
+      },
+    );
   }
 }

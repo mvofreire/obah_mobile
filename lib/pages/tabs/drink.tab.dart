@@ -46,11 +46,17 @@ class DrinkTab extends StatelessWidget {
         children: <Widget>[
           FloatingActionButton(
             onPressed: () async {
+              // var dialog = await showDialog(
+              //   context: context,
+              //   builder: (context) => Text("teste"),
+              // );
+              // print(dialog);
+
               EventDialogAction type = await Navigator.push(
                 context,
                 MaterialPageRoute<EventDialogAction>(
                   builder: (context) => AddEvent(),
-                  fullscreenDialog: true,
+                  fullscreenDialog: false,
                 ),
               );
               print(type);

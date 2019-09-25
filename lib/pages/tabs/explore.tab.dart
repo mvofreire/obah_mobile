@@ -14,8 +14,11 @@ class ExploreItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+        margin: EdgeInsets.all(1),
         color: Colors.white,
-        elevation: 2,
+        elevation: 0.5,
+        shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(0.5)),
         child: FlatButton(
           onPressed: () => onClick(offer),
           child: Container(
@@ -62,9 +65,10 @@ class ExploreTab extends StatelessWidget {
           );
         } else {
           content = GridView.count(
+            padding: const EdgeInsets.all(0),
             crossAxisCount: 2,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
             children: snapshot.data.map((Offer offer) {
               return ExploreItemCard(
                 offer: offer,
